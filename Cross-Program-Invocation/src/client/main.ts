@@ -5,7 +5,6 @@
 import {
   establishConnection,
   establishPayer,
-  checkProgram,
   create,
 } from './hello_world';
 
