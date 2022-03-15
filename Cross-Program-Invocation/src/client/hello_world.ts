@@ -10,6 +10,7 @@ import {
   TransactionInstruction,
   Transaction,
   sendAndConfirmTransaction,
+  createProgramAddress,
 } from '@solana/web3.js';
 import fs from 'mz/fs';
 import path from 'path';
@@ -149,16 +150,16 @@ export async function create(): Promise<void> {
   }
 
   // deterministically derive the allocated key
-  let allocated_pubkey = createProgramAddress(&[b"You pass butter"], &programId);
+  let allocated_pubkey = createProgramAddress('You pass butter', programId);
 
   let syskey = SystemProgram.programId;
 
   const instruction = new TransactionInstruction({
-    keys: [{pubkey: syskey, isSigner: false, isWritable: false}，{pubkey: allocated_pubkey, isSigner: false, isWritable: true}],
+    keys: [{pubkey: syskey, isSigner: false, isWritable: false},{pubkey: allocated_pubkey, isSigner: false, isWritable: true}],
     programId,
     data: Buffer.alloc(0), // All instructions are hellos  
   });
-  await sendAndConfirmTransaction(q
+  await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
     [payer],
