@@ -10,7 +10,6 @@ import {
   TransactionInstruction,
   Transaction,
   sendAndConfirmTransaction,
-  createProgramAddress,
 } from '@solana/web3.js';
 import fs from 'mz/fs';
 import path from 'path';
@@ -150,7 +149,7 @@ export async function create(): Promise<void> {
   }
 
   // deterministically derive the allocated key
-  let allocated_pubkey = createProgramAddress('You pass butter', programId);
+  let allocated_pubkey = PublicKey.createProgramAddress('You pass butter', programId);
 
   let syskey = SystemProgram.programId;
 
