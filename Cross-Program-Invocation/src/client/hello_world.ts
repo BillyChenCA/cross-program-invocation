@@ -149,7 +149,7 @@ export async function create(): Promise<void> {
   }
 
   // deterministically derive the allocated key
-  let allocated_pubkey = PublicKey.createProgramAddress('You pass butter', programId);
+  let allocated_pubkey = PublicKey.createProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
 
   let syskey = SystemProgram.programId;
 
