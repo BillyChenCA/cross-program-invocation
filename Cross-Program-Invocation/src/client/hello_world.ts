@@ -149,7 +149,9 @@ export async function create(): Promise<void> {
   }
 
   // deterministically derive the allocated key
-  let allocated_pubkey = await PublicKey.createProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
+  let [allocated_pubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
+
+  console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
 
   let syskey = SystemProgram.programId;
 
