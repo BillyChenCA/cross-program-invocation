@@ -13,7 +13,6 @@ import {
 } from '@solana/web3.js';
 import fs from 'mz/fs';
 import path from 'path';
-import * as borsh from 'borsh';
 
 import {getPayer, getRpcUrl, createKeypairFromFile} from './utils';
 
@@ -56,32 +55,7 @@ const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'spl_example_cross_program_invoc
  */
 const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'spl_example_cross_program_invocation-keypair.json');
 
-/**
- * The state of a greeting account managed by the hello world program
- */
-class GreetingAccount {
-  counter = 0;
-  constructor(fields: {counter: number} | undefined = undefined) {
-    if (fields) {
-      this.counter = fields.counter;
-    }
-  }
-}
 
-/**
- * Borsh schema definition for greeting accounts
- */
-const GreetingSchema = new Map([
-  [GreetingAccount, {kind: 'struct', fields: [['counter', 'u32']]}],
-]);
-
-/**
- * The expected size of each greeting account.
- */
-const GREETING_SIZE = borsh.serialize(
-  GreetingSchema,
-  new GreetingAccount(),
-).length;
 
 /**
  * Establish a connection to the cluster
@@ -97,29 +71,11 @@ export async function establishConnection(): Promise<void> {
  * Establish an account to pay for everything
  */
 export async function establishPayer(): Promise<void> {
-  let fees = 0;
-  if (!payer) {
-    const {feeCalculator} = await connection.getRecentBlockhash();
 
-    // Calculate the cost to fund the greeter account
-    fees += await connection.getMinimumBalanceForRentExemption(GREETING_SIZE);
-
-    // Calculate the cost of sending transactions
-    fees += feeCalculator.lamportsPerSignature * 100; // wag
-
-    payer = await getPayer();
-  }
-
+  let payer = await getPayer();
+  
   let lamports = await connection.getBalance(payer.publicKey);
-  if (lamports < fees) {
-    // If current balance is not enough to pay for fees, request an airdrop
-    const sig = await connection.requestAirdrop(
-      payer.publicKey,
-      fees - lamports,
-    );
-    await connection.confirmTransaction(sig);
-    lamports = await connection.getBalance(payer.publicKey);
-  }
+ 
 
   console.log(
     'Using account',
@@ -132,9 +88,9 @@ export async function establishPayer(): Promise<void> {
 
 
 /**
- * create account
+ * allocate account
  */
-export async function create(): Promise<void> {
+export async function allocate(): Promise<void> {
   
   
   // Read program id from keypair file
@@ -151,7 +107,7 @@ export async function create(): Promise<void> {
   // deterministically derive the allocated key
   let [allocated_pubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
 
-  console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
+  console.log(`bump: ${bump}, pubkey: ${allocated_pubkey.toBase58()}`);
 
   let syskey = SystemProgram.programId;
 

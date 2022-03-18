@@ -1,9 +1,9 @@
 [package]
-name = "spl-example-cross-program-invocation"
+name = "cross-program-invocation-allocate"
 version = "1.0.0"
 description = "Solana Program Library Cross Program Invocation Example"
-authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana-program-library"
+authors = ["BlockSec"]
+repository = "https://github.com/blocksecteam/Solana_demo.git"
 license = "Apache-2.0"
 edition = "2018"
 publish = false

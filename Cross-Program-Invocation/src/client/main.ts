@@ -5,11 +5,11 @@
 import {
   establishConnection,
   establishPayer,
-  create,
-} from './hello_world';
+  allocate,
+} from './allocate';
 
 async function main() {
-  console.log("Let's create an PDA account");
+  console.log("Let's allocate an PDA account");
 
   // Establish connection to the cluster
   await establishConnection();
@@ -19,7 +19,7 @@ async function main() {
 
 
   // create the account;
-  await create();
+  await allocate();
   
 
   console.log('Success');
